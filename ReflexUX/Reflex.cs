@@ -64,23 +64,23 @@ namespace ReflexUX
         public event PropertyChangingEventHandler PropertyChanging;
     }
 
-    public class Reflex<TContract> : Reflex where TContract : class
+    public class Reflex<TProxy> : Reflex where TProxy : class
     {
-        private readonly TContract contract;
-        public TContract Contract
+        private readonly TProxy proxy;
+        public TProxy Proxy
         {
-            get { return contract; }
+            get { return proxy; }
         }
 
         public Reflex()
             : base()
         {
-            contract = Impromptu.ActLike<TContract>(this, typeof(IReactiveNotifyPropertyChanged), typeof(INotifyPropertyChanged));
+            proxy = Impromptu.ActLike<TProxy>(this, typeof(IReactiveNotifyPropertyChanged), typeof(INotifyPropertyChanged));
         }
 
-        public IObservable<IObservedChange<TContract, U>> Observe<U>(Expression<Func<TContract, U>> propf)
+        public IObservable<IObservedChange<TProxy, U>> Observe<U>(Expression<Func<TProxy, U>> propf)
         {
-            return Contract.ObservableForProperty(propf);
+            return Proxy.ObservableForProperty(propf);
         }
     }
 }
