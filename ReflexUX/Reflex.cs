@@ -15,16 +15,30 @@ namespace ReflexUX
     public class Reflex : ImpromptuDictionary, IReactiveNotifyPropertyChanged
     {
         private readonly MakeObjectReactiveHelper reactiveHelper;
+        protected readonly ReflexCommandBinder commandBinder;
+        protected readonly ReflexCommandBinder commandAsyncBinder;
 
         protected dynamic Dynamic
         {
             get { return this; }
         }
 
+        public dynamic Command
+        {
+            get { return commandBinder; }
+        }
+
+        public dynamic CommandAsync
+        {
+            get { return commandAsyncBinder; }
+        }
+
         public Reflex()
             : base()
         {
             reactiveHelper = new MakeObjectReactiveHelper(this);
+            commandBinder = new ReflexCommandBinder(this);
+            commandAsyncBinder = new ReflexCommandBinder(this, async: true);
         }
 
         public IObservable<IObservedChange<Reflex, object>> Observe(string propname)
