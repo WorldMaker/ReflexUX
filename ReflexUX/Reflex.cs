@@ -9,6 +9,7 @@ using ImpromptuInterface;
 using ImpromptuInterface.Dynamic;
 using ReactiveUI;
 using System.Linq.Expressions;
+using System.Reactive.Concurrency;
 
 namespace ReflexUX
 {
@@ -44,6 +45,17 @@ namespace ReflexUX
         public IObservable<IObservedChange<Reflex, object>> Observe(string propname)
         {
             return this.ObservableForProperty(new[] { propname });
+        }
+
+        public ObservableAsPropertyHelper<T> React<T>(string name, IObservable<T> observable, T initialValue = default(T), IScheduler scheduler = null)
+        {
+            this[name] = initialValue;
+            return new ObservableAsPropertyHelper<T>(observable, value =>
+                {
+                    this[name] = value;
+                },
+                initialValue,
+                scheduler);
         }
 
         public IObservable<IObservedChange<object, object>> Changed
