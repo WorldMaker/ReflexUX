@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Text;
 using ImpromptuInterface;
 using ImpromptuInterface.Dynamic;
-using ImpromptuInterface.Internal.Support;
 using Microsoft.CSharp.RuntimeBinder;
 using ReactiveUI.Xaml;
 
@@ -44,7 +43,7 @@ namespace ReflexUX
         }
     }
 
-    public class ReflexCommandBinder : DynamicObject, ICustomTypeProvider
+    public class ReflexCommandBinder : DynamicObject // TODO: ICustomTypeProvider
     {
         private readonly object parent;
         private readonly Dictionary<string, IReactiveCommand> commands = new Dictionary<string, IReactiveCommand>();
@@ -55,19 +54,6 @@ namespace ReflexUX
             this.parent = parent;
             this.async = async;
         }
-
-
-#if SILVERLIGHT5
-        // TODO: Port/borrow Silverlight 5 support from ImpromptuInterface.MVVM
-        /// <summary>
-        /// Gets the custom Type.
-        /// </summary>
-        /// <returns></returns>
-        //public Type GetCustomType()
-        //{
-        //    return this.GetDynamicCustomType();
-        //}
-#endif
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
@@ -98,7 +84,7 @@ namespace ReflexUX
                         result = new ReactiveCommand();
                     }
                     var closure = new ReflexCommandClosure(parent, name);
-                    this[name].Subscribe(p => closure.Invoke(p));
+                    result.Subscribe(p => closure.Invoke(p));
                     commands.Add(name, result);
                 }
 
@@ -110,7 +96,7 @@ namespace ReflexUX
                 {
                     commands[name] = value;
                     var closure = new ReflexCommandClosure(parent, name);
-                    this[name].Subscribe(p => closure.Invoke(p));
+                    commands[name].Subscribe(p => closure.Invoke(p));
                 }
             }
         }
