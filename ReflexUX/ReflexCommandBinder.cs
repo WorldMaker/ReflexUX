@@ -26,20 +26,19 @@ namespace ReflexUX
             this.invokeNoArg = new CacheableInvocation(InvocationKind.InvokeMemberAction, invokeName, 0);
         }
 
-        public void Invoke(object parameter)
+        public object Invoke(object parameter)
         {
             try
             {
                 if (parameter == null)
                 {
-                    invokeNoArg.Invoke(target);
-                    return;
+                    return invokeNoArg.Invoke(target);
                 }
             }
             catch (RuntimeBinderException) { /* pass */ }
             catch (TargetParameterCountException) { /* pass */ }
-
-            invoke.Invoke(target, parameter);
+            
+            return invoke.Invoke(target, parameter);
         }
     }
 
@@ -75,16 +74,18 @@ namespace ReflexUX
 
                 if (!commands.TryGetValue(name, out result))
                 {
+                    var closure = new ReflexCommandClosure(parent, name);
                     if (async)
                     {
-                        result = new ReactiveAsyncCommand();
+                        var resultasync = new ReactiveAsyncCommand();
+                        resultasync.RegisterAsyncAction(p => closure.Invoke(p));
+                        result = resultasync;
                     }
                     else
                     {
                         result = new ReactiveCommand();
+                        result.Subscribe(p => closure.Invoke(p));
                     }
-                    var closure = new ReflexCommandClosure(parent, name);
-                    result.Subscribe(p => closure.Invoke(p));
                     commands.Add(name, result);
                 }
 
@@ -94,9 +95,17 @@ namespace ReflexUX
             {
                 if (value != null)
                 {
-                    commands[name] = value;
                     var closure = new ReflexCommandClosure(parent, name);
-                    commands[name].Subscribe(p => closure.Invoke(p));
+                    var valueasync = value as ReactiveAsyncCommand;
+                    if (valueasync != null)
+                    {
+                        valueasync.RegisterAsyncAction(p => closure.Invoke(p));
+                    }
+                    else
+                    {
+                        value.Subscribe(p => closure.Invoke(p));
+                    }
+                    commands[name] = value;
                 }
             }
         }
