@@ -13,9 +13,8 @@ using System.Reactive.Concurrency;
 
 namespace ReflexUX
 {
-    public class Reflex : ImpromptuDictionary, IReactiveNotifyPropertyChanged
+    public class Reflex : ImpromptuDictionary
     {
-        private readonly MakeObjectReactiveHelper reactiveHelper;
         protected readonly ReflexCommandBinder commandBinder;
         protected readonly ReflexCommandBinder commandAsyncBinder;
 
@@ -37,7 +36,6 @@ namespace ReflexUX
         public Reflex()
             : base()
         {
-            reactiveHelper = new MakeObjectReactiveHelper(this);
             commandBinder = new ReflexCommandBinder(this);
             commandAsyncBinder = new ReflexCommandBinder(this, async: true);
         }
@@ -57,23 +55,6 @@ namespace ReflexUX
                 initialValue,
                 scheduler);
         }
-
-        public IObservable<IObservedChange<object, object>> Changed
-        {
-            get { return reactiveHelper.Changed; }
-        }
-
-        public IObservable<IObservedChange<object, object>> Changing
-        {
-            get { return reactiveHelper.Changing; }
-        }
-
-        public IDisposable SuppressChangeNotifications()
-        {
-            return reactiveHelper.SuppressChangeNotifications();
-        }
-
-        public event PropertyChangingEventHandler PropertyChanging;
     }
 
     public class Reflex<TProxy> : Reflex where TProxy : class
@@ -87,7 +68,7 @@ namespace ReflexUX
         public Reflex()
             : base()
         {
-            proxy = Impromptu.ActLike<TProxy>(this, typeof(IReactiveNotifyPropertyChanged), typeof(INotifyPropertyChanged));
+            proxy = Impromptu.ActLike<TProxy>(this, typeof(INotifyPropertyChanged));
         }
 
         public IObservable<IObservedChange<TProxy, U>> Observe<U>(Expression<Func<TProxy, U>> propf)

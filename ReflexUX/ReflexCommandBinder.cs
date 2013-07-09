@@ -9,7 +9,7 @@ using System.Text;
 using ImpromptuInterface;
 using ImpromptuInterface.Dynamic;
 using Microsoft.CSharp.RuntimeBinder;
-using ReactiveUI.Xaml;
+using ReactiveUI;
 
 namespace ReflexUX
 {
@@ -77,7 +77,7 @@ namespace ReflexUX
                     var closure = new ReflexCommandClosure(parent, name);
                     if (async)
                     {
-                        var resultasync = new ReactiveAsyncCommand();
+                        var resultasync = new ReactiveCommand();
                         resultasync.RegisterAsyncAction(p => closure.Invoke(p));
                         result = resultasync;
                     }
@@ -96,10 +96,9 @@ namespace ReflexUX
                 if (value != null)
                 {
                     var closure = new ReflexCommandClosure(parent, name);
-                    var valueasync = value as ReactiveAsyncCommand;
-                    if (valueasync != null)
+                    if (async)
                     {
-                        valueasync.RegisterAsyncAction(p => closure.Invoke(p));
+                        value.RegisterAsyncAction(p => closure.Invoke(p));
                     }
                     else
                     {

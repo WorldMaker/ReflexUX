@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.rst = README.rst
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReflexUX_Net45", "ReflexUX_45\ReflexUX_Net45.csproj", "{E4FEEF89-A765-4813-BCFE-795A765E1F9C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,10 +25,6 @@ Global
 		{A31F9DC6-ECC2-4323-B01D-E95F910FFE0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A31F9DC6-ECC2-4323-B01D-E95F910FFE0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A31F9DC6-ECC2-4323-B01D-E95F910FFE0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E4FEEF89-A765-4813-BCFE-795A765E1F9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E4FEEF89-A765-4813-BCFE-795A765E1F9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E4FEEF89-A765-4813-BCFE-795A765E1F9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E4FEEF89-A765-4813-BCFE-795A765E1F9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
